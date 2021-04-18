@@ -1,7 +1,9 @@
 package ro.polak.urlshortener.adapter.api;
 
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import ro.polak.urlshortener.BaseIT;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -15,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UrlShortcutControllerImplTest extends BaseIT {
 
   public static final String X_AUTH_USER_ID_HEADER = "X-AUTH-USER-ID";
+  public static final int OTHWER_USER_ID = 999;
 
   @Test
   void should_create_new_url_shortcut() throws Exception {
@@ -73,10 +76,44 @@ class UrlShortcutControllerImplTest extends BaseIT {
   }
 
   @Test
+  void should_delete_shortcut()  throws Exception {
+    MvcResult result = mockMvc.perform(post("/api/v1/shortcuts")
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(X_AUTH_USER_ID_HEADER, 123)
+        .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
+        .andReturn();
+
+    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+
+    mockMvc.perform(delete("/api/v1/shortcuts/"+id)
+        .header(X_AUTH_USER_ID_HEADER, 123)
+    ).andExpect(status().isAccepted());
+
+    // TODO Make sure the shortcut was actually deleted
+  }
+
+  @Test
   void should_not_be_able_to_delete_non_existing_shortcuts()  throws Exception {
     mockMvc.perform(delete("/api/v1/shortcuts/XYZ")
         .header(X_AUTH_USER_ID_HEADER, 123)
     ).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void should_not_allow_deleting_shortcuts_of_another_user()  throws Exception {
+    MvcResult result = mockMvc.perform(post("/api/v1/shortcuts")
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(X_AUTH_USER_ID_HEADER, 123)
+        .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
+        .andReturn();
+
+    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+
+    mockMvc.perform(delete("/api/v1/shortcuts/"+id)
+        .header(X_AUTH_USER_ID_HEADER, OTHWER_USER_ID)
+    ).andExpect(status().isForbidden());
+
+    // TODO Make sure the shortcut is still there
   }
 
   @Test
@@ -86,5 +123,43 @@ class UrlShortcutControllerImplTest extends BaseIT {
         .header(X_AUTH_USER_ID_HEADER, 123)
         .content("{\"destinationUrl\": \"https://www.google.com/\"}")
     ).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void should_update_shortcut()  throws Exception {
+    MvcResult result = mockMvc.perform(post("/api/v1/shortcuts")
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(X_AUTH_USER_ID_HEADER, 123)
+        .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
+        .andReturn();
+
+    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+
+    mockMvc.perform(post("/api/v1/shortcuts/"+id)
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(X_AUTH_USER_ID_HEADER, 123)
+        .content("{\"destinationUrl\": \"https://www.example.com/\"}")
+    ).andExpect(status().isOk());
+
+    // TODO Make sure the shortcut was actually updated
+  }
+
+  @Test
+  void should_not_allow_updating_shortcuts_of_another_user()  throws Exception {
+    MvcResult result = mockMvc.perform(post("/api/v1/shortcuts")
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(X_AUTH_USER_ID_HEADER, 123)
+        .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
+        .andReturn();
+
+    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+
+    mockMvc.perform(post("/api/v1/shortcuts/"+id)
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(X_AUTH_USER_ID_HEADER, OTHWER_USER_ID)
+        .content("{\"destinationUrl\": \"https://www.example.com/\"}")
+    ).andExpect(status().isForbidden());
+
+    // TODO Make sure the shortcut was actually updated
   }
 }

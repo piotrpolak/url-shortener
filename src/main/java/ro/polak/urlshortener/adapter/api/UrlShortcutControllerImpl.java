@@ -29,7 +29,7 @@ class UrlShortcutControllerImpl implements ApiApi {
   @Override
   public ResponseEntity<Void> deleteUrlShortcut(String urlShortcutId, Long X_AUTH_USER_ID) {
     urlShortcutFacadeService.deleteUrlShortcut(urlShortcutId, X_AUTH_USER_ID);
-    return (ResponseEntity<Void>) ResponseEntity.accepted();
+    return ResponseEntity.accepted().build();
   }
 
   @Override

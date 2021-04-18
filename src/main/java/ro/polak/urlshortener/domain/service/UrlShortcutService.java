@@ -23,7 +23,7 @@ public class UrlShortcutService {
   public void deleteUrlShortcut(String urlShortcutId, long userId) {
     UrlShortcut existingUrlShortcut = urlShortcutRepository.findById(urlShortcutId).orElseThrow(NoShortcutFoundException::new);
 
-    if(existingUrlShortcut.getCreatedBy() == userId) {
+    if(existingUrlShortcut.getCreatedBy() != userId) {
       throw new UserNotEntitledToShortcutException();
     }
 
@@ -33,7 +33,7 @@ public class UrlShortcutService {
   public UrlShortcut update(String urlShortcutId, UrlShortcut urlShortcut) {
     UrlShortcut existingUrlShortcut = urlShortcutRepository.findById(urlShortcutId).orElseThrow(NoShortcutFoundException::new);
 
-    if(existingUrlShortcut.getCreatedBy() == urlShortcut.getCreatedBy()) {
+    if(existingUrlShortcut.getCreatedBy() != urlShortcut.getCreatedBy()) {
       throw new UserNotEntitledToShortcutException();
     }
 

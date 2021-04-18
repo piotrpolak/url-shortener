@@ -53,7 +53,7 @@ to guess the next text ID in the sequence.
 This solution:
 - allows generating text IDs in a single call to the database (a single repository save)
 - scales up well and makes it possible to use all the benefits of the **database sequence of longs**:
-  - high performance systems might tune up the `increment_size` of the sequence (see `https://www.baeldung.com/hi-lo-algorithm-hibernate`)
+  - high performance systems might tune up the `increment_size` of the sequence (see https://www.baeldung.com/hi-lo-algorithm-hibernate)
   - all the instances of the URL shortener microservice use the same database sequence and don't need to worry about **ID conflicts**
 - makes it really hard to reverse engineer and guess the next text id in the sequence (mentioned above)
 
@@ -74,6 +74,9 @@ mvn spring-boot:run -PswaggerUI
 ```
 
 // TODO DO MANUAL TESTS
+
+// TODO Docker compose command
+
 Swagger UI can be accessed at: http://localhost:8080/swagger-ui/index.html
 
 ## API First approach and OpenAPI generator
