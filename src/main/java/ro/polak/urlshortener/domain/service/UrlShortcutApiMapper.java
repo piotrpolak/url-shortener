@@ -1,4 +1,4 @@
-package ro.polak.urlshortener.adapter.api;
+package ro.polak.urlshortener.domain.service;
 
 import java.net.URI;
 import java.util.List;
@@ -13,28 +13,26 @@ import ro.polak.urlshortener.domain.model.UrlShortcut;
 class UrlShortcutApiMapper {
 
   @SneakyThrows
-  public UrlShortcut toUrlShortcut(final long userId, final UrlShortcutRequestDto urlShortcutRequestDto) {
+  UrlShortcut toUrlShortcut(final long userId, final UrlShortcutRequestDto urlShortcutRequestDto) {
     return UrlShortcut.builder()
         .createdBy(userId)
         .destinationUrl(new URI(urlShortcutRequestDto.getDestinationUrl()))
         .build();
   }
 
-  public UrlShortcutResponseDto toUrlShortcutResponse(final UrlShortcut urlShortcut) {
+  UrlShortcutResponseDto toUrlShortcutResponse(final UrlShortcut urlShortcut) {
     return UrlShortcutResponseDto.builder()
         .destinationUrl(urlShortcut.getDestinationUrl().toString())
         .createdAt(urlShortcut.getCreatedAt())
+        .createdBy(urlShortcut.getCreatedBy())
+        .shortenedUrl("http://localhost:8080/" + urlShortcut.getTextId())
         .id(urlShortcut.getTextId())
         .build();
   }
 
-  public List<UrlShortcutResponseDto> toUrlShortcutsResponse(List<UrlShortcut> urlShortcuts) {
+  List<UrlShortcutResponseDto> toUrlShortcutsResponse(List<UrlShortcut> urlShortcuts) {
     return urlShortcuts.stream()
-        .map(urlShortcut -> UrlShortcutResponseDto.builder()
-            .destinationUrl(urlShortcut.getDestinationUrl().toString())
-            .id(urlShortcut.getTextId())
-            .createdAt(urlShortcut.getCreatedAt())
-            .build())
+        .map(urlShortcut -> toUrlShortcutResponse(urlShortcut))
         .collect(Collectors.toList());
   }
 }

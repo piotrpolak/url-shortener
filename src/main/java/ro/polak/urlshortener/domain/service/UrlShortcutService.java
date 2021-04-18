@@ -8,36 +8,50 @@ import ro.polak.urlshortener.domain.repository.UrlShortcutRepository;
 
 @RequiredArgsConstructor
 @Service
-public class UrlShortcutService {
+class UrlShortcutService {
 
   private final UrlShortcutRepository urlShortcutRepository;
 
-  public UrlShortcut create(UrlShortcut urlShortcut) {
+  UrlShortcut create(UrlShortcut urlShortcut) {
     return urlShortcutRepository.save(urlShortcut);
   }
 
-  public List<UrlShortcut> getUrlShortcutsByUserId(long userId) {
+  List<UrlShortcut> getUrlShortcutsByUserId(long userId) {
     return urlShortcutRepository.getUrlShortcutsByCreatedBy(userId);
   }
 
-  public void deleteUrlShortcut(String urlShortcutId, long userId) {
-    UrlShortcut existingUrlShortcut = urlShortcutRepository.findById(urlShortcutId).orElseThrow(NoShortcutFoundException::new);
+  UrlShortcut getShortcutsByIdAndUserId(String urlShortcutId, Long userId) {
+    UrlShortcut existingUrlShortcut = getShortcutById(urlShortcutId);
 
-    if(existingUrlShortcut.getCreatedBy() != userId) {
+    if (existingUrlShortcut.getCreatedBy() != userId) {
+      throw new UserNotEntitledToShortcutException();
+    }
+
+    return existingUrlShortcut;
+  }
+
+  void deleteUrlShortcut(String urlShortcutId, long userId) {
+    UrlShortcut existingUrlShortcut = getShortcutById(urlShortcutId);
+
+    if (existingUrlShortcut.getCreatedBy() != userId) {
       throw new UserNotEntitledToShortcutException();
     }
 
     urlShortcutRepository.delete(existingUrlShortcut);
   }
 
-  public UrlShortcut update(String urlShortcutId, UrlShortcut urlShortcut) {
-    UrlShortcut existingUrlShortcut = urlShortcutRepository.findById(urlShortcutId).orElseThrow(NoShortcutFoundException::new);
+  UrlShortcut update(String urlShortcutId, UrlShortcut urlShortcut) {
+    UrlShortcut existingUrlShortcut = getShortcutById(urlShortcutId);
 
-    if(existingUrlShortcut.getCreatedBy() != urlShortcut.getCreatedBy()) {
+    if (existingUrlShortcut.getCreatedBy() != urlShortcut.getCreatedBy()) {
       throw new UserNotEntitledToShortcutException();
     }
 
     existingUrlShortcut.setDestinationUrl(urlShortcut.getDestinationUrl());
     return urlShortcutRepository.save(existingUrlShortcut);
+  }
+
+  UrlShortcut getShortcutById(String urlShortcutId) {
+    return urlShortcutRepository.findById(urlShortcutId).orElseThrow(NoShortcutFoundException::new);
   }
 }

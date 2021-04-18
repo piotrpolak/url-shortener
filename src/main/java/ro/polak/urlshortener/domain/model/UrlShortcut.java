@@ -1,7 +1,6 @@
 package ro.polak.urlshortener.domain.model;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -33,7 +32,8 @@ public class UrlShortcut {
       parameters = {
           @Parameter(name = "sequence_name", value = "url_shortcut_sequence"),
           @Parameter(name = "initial_value", value = "1"),
-          @Parameter(name = "increment_size", value = "1")
+          @Parameter(name = "increment_size", value = "1"),
+          @Parameter(name = "salt", value = "dfga083hf-SOME-RANDOM-VALUE")
       }
   )
   private String textId;
