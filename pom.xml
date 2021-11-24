@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
+        <version>2.5.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ro.polak</groupId>
@@ -16,11 +16,12 @@
 
     <properties>
         <java.version>11</java.version>
-        <testcontainers.version>1.15.2</testcontainers.version>
-        <lombok.version>1.18.12</lombok.version>
+        <testcontainers.version>1.16.2</testcontainers.version>
+        <lombok.version>1.18.22</lombok.version>
         <spotless.version>2.6.1</spotless.version>
         <openapi-generator-maven-plugin.version>5.3.0</openapi-generator-maven-plugin.version>
         <hashids.version>1.0.3</hashids.version>
+        <spring-cloud-starter.version>3.0.4</spring-cloud-starter.version>
     </properties>
 
     <dependencies>
@@ -57,7 +58,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter</artifactId>
-            <version>2.2.5.RELEASE</version>
+            <version>${spring-cloud-starter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
