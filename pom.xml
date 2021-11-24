@@ -19,7 +19,7 @@
         <testcontainers.version>1.15.2</testcontainers.version>
         <lombok.version>1.18.12</lombok.version>
         <spotless.version>2.6.1</spotless.version>
-        <openapi-generator-maven-plugin.version>5.0.1</openapi-generator-maven-plugin.version>
+        <openapi-generator-maven-plugin.version>5.3.0</openapi-generator-maven-plugin.version>
         <swagger-ui.version>3.36.1</swagger-ui.version>
         <hashids.version>1.0.3</hashids.version>
     </properties>
