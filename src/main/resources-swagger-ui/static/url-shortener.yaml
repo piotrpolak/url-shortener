@@ -1,0 +1,251 @@
+---
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: URL Shortener
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080/
+paths:
+  "/api/v1/users/{userId}/shortcuts":
+    get:
+      summary: Gets a list of shortcuts of a given user (without pagination)
+      operationId: getUserShortcuts
+      tags:
+        - shortcut
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          description: User ID
+          required: true
+          example: '123'
+      responses:
+        '200':
+          description: The list of the user URL shortcuts
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UrlShortcutList"
+
+  "/api/v1/shortcuts":
+    post:
+      summary: Create an URL shortcut
+      operationId: createUrlShortcut
+      tags:
+        - shortcut
+      parameters:
+        - in: header
+          name: X-AUTH-USER-ID
+          schema:
+            type: integer
+            format: int64
+          description: Used to identify user, a value populated from API Gateway
+          required: true
+          example: '123'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UrlShortcutRequest"
+      responses:
+        '201':
+          description: The shortcut metadata
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UrlShortcutResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/api/v1/shortcuts/{urlShortcutId}":
+    delete:
+      summary: Deletes URL shortcut
+      operationId: deleteUrlShortcut
+      tags:
+        - shortcut
+      parameters:
+        - in: path
+          name: urlShortcutId
+          schema:
+            type: string
+          description: Shortcut ID
+          required: true
+          example: 'XAZ'
+        - in: header
+          name: X-AUTH-USER-ID
+          schema:
+            type: integer
+            format: int64
+          description: Used to identify user, a value populated from API Gateway
+          required: true
+          example: '123'
+      responses:
+        '202':
+          description: Shortcut deleted
+        '404':
+          description: Shortcut does not exist
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '403':
+          description: No permission to given shortcut (created by other user)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    get:
+      summary: Gets an URL shortcut
+      operationId: getUrlShortcut
+      tags:
+        - shortcut
+      parameters:
+        - in: path
+          name: urlShortcutId
+          schema:
+            type: string
+          description: Shortcut ID
+          required: true
+          example: 'XAZ'
+        - in: header
+          name: X-AUTH-USER-ID
+          schema:
+            type: integer
+            format: int64
+          description: Used to identify user, a value populated from API Gateway
+          required: true
+          example: '123'
+      responses:
+        '200':
+          description: Shortcut found and user entitled to access
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UrlShortcutResponse"
+        '404':
+          description: Shortcut does not exist
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '403':
+          description: No permission to given shortcut (created by other user)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    post:
+      summary: Updates URL shortcut
+      operationId: updateUrlShortcut
+      tags:
+        - shortcut
+      parameters:
+        - in: path
+          name: urlShortcutId
+          schema:
+            type: string
+          description: Shortcut ID
+          required: true
+          example: 'XAZ'
+        - in: header
+          name: X-AUTH-USER-ID
+          schema:
+            type: integer
+            format: int64
+          description: Used to identify user, a value populated from API Gateway
+          required: true
+          example: '123'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UrlShortcutRequest"
+      responses:
+        '202':
+          description: Shortcut deleted
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UrlShortcutResponse"
+        '404':
+          description: Shortcut does not exist
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '403':
+          description: No permission to given shortcut (created by other user)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+components:
+  schemas:
+    UrlShortcutRequest:
+      type: object
+      required:
+        - destinationUrl
+      properties:
+        destinationUrl:
+          type: string
+          example: 'http://www.example.com/'
+    UrlShortcutResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'X4K'
+        destinationUrl:
+          type: string
+          example: 'http://www.example.com/'
+        shortenedUrl:
+          type: string
+          example: 'http://localhost:8080/X4k'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2021-04-18T20:42:00.239Z'
+        createdBy:
+          type: integer
+          format: int64
+          example: '123'
+    UrlShortcutList:
+      type: array
+      items:
+        $ref: '#/definitions/UrlShortcutResponse'
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int64
+        message:
+          type: string
