@@ -22,7 +22,7 @@ Rules and assumptions:
 ### The generation of sequential text IDs
 
 The custom [`HashidsSequenceGenerator`]() implementation uses a combination of a **database sequence of longs**
-and **number to text mapping**, the later is implemented by using a popular Hashids library.
+and **number to text mapping**, the latter is implemented by using a popular Hashids library.
 
 The generator definition: https://github.com/piotrpolak/url-shortener/blob/master/src/main/java/ro/polak/urlshortener/support/HashidsSequenceGenerator.java
 The generator usage: https://github.com/piotrpolak/url-shortener/blob/master/src/main/java/ro/polak/urlshortener/domain/model/UrlShortcut.java#L30
@@ -87,7 +87,15 @@ mvn clean install
 
 ## Running the project locally
 
-Running the project locally (H2 in-memory database)
+Running the project locally using Docker compose:
+
+```bash
+docker-compose up
+```
+
+Alternatively run the service locally:
+
+Prerequisite: Run and configure Postgress database in `application.properties` (or by using environment variables).
 
 ```bash
 pushd url-shortener-app && mvn spring-boot:run; popd
@@ -97,6 +105,7 @@ Running the project locally (H2 in-memory database + SwaggerUI)
 ```bash
 pushd url-shortener-app && mvn spring-boot:run -PswaggerUI; popd
 ```
+
 Swagger file: http://localhost:8080/swagger.yml
 Swagger UI can be accessed at: http://localhost:8080/swagger-ui.html
 
@@ -105,14 +114,7 @@ Swagger UI can be accessed at: http://localhost:8080/swagger-ui.html
 
 ## API First approach and OpenAPI generator
 
-The DTOs and controller interfaces are generated out of the `swagger.yml` definition by using
+The DTOs and controller interfaces are generated out of the `url-shortener.yaml` definition by using
 https://github.com/OpenAPITools/openapi-generator tool.
 
 More on the API First approach can be found at https://www.polak.ro/2021/04/02/api-first-and-code-generation-done-right.html
-
-## Potential improvements
-- Development Docker Compose setup allowing to run the app against a real database
-- Test containers in test to simulate a real database
-- Extended input validation using additional JSR annotations
-- Extended error handler and improved error messages (for now the app uses the HTTP codes mostly)
-- Automatic code formatting at the build time
