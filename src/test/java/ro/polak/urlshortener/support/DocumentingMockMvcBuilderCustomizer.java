@@ -9,10 +9,10 @@ public class DocumentingMockMvcBuilderCustomizer implements MockMvcBuilderCustom
 
   @Override
   public void customize(ConfigurableMockMvcBuilder<?> builder) {
-    builder.alwaysDo(MockMvcRestDocumentation.document(
-        "{class-name}/{method-name}",
-        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-        Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
-    ));
+    builder.alwaysDo(
+        MockMvcRestDocumentation.document(
+            "{class-name}/{method-name}",
+            Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+            Preprocessors.preprocessResponse(Preprocessors.prettyPrint())));
   }
 }

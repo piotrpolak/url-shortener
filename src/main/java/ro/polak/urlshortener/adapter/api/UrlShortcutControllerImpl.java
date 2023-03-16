@@ -1,8 +1,7 @@
 package ro.polak.urlshortener.adapter.api;
 
-import java.util.List;
-
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +16,11 @@ class UrlShortcutControllerImpl implements ApiApi {
   private final UrlShortcutFacadeService urlShortcutFacadeService;
 
   @Override
-  public ResponseEntity<UrlShortcutResponseDto> createUrlShortcut(final Long userIdFromSecurityContext,
-                                                                  final @Valid UrlShortcutRequestDto urlShortcutRequestDto) {
-    final UrlShortcutResponseDto urlShortcutResponseDto = urlShortcutFacadeService.create(userIdFromSecurityContext, urlShortcutRequestDto);
+  public ResponseEntity<UrlShortcutResponseDto> createUrlShortcut(
+      final Long userIdFromSecurityContext,
+      final @Valid UrlShortcutRequestDto urlShortcutRequestDto) {
+    final UrlShortcutResponseDto urlShortcutResponseDto =
+        urlShortcutFacadeService.create(userIdFromSecurityContext, urlShortcutRequestDto);
     return ResponseEntity.ok(urlShortcutResponseDto);
   }
 
@@ -29,18 +30,27 @@ class UrlShortcutControllerImpl implements ApiApi {
   }
 
   @Override
-  public ResponseEntity<Void> deleteUrlShortcut(String urlShortcutId, Long userIdFromSecurityContext) {
+  public ResponseEntity<Void> deleteUrlShortcut(
+      String urlShortcutId, Long userIdFromSecurityContext) {
     urlShortcutFacadeService.deleteUrlShortcut(urlShortcutId, userIdFromSecurityContext);
     return ResponseEntity.accepted().build();
   }
 
   @Override
-  public ResponseEntity<UrlShortcutResponseDto> getUrlShortcut(String urlShortcutId, Long userIdFromSecurityContext) {
-    return ResponseEntity.ok(urlShortcutFacadeService.getShortcutsByIdAndUserId(urlShortcutId, userIdFromSecurityContext));
+  public ResponseEntity<UrlShortcutResponseDto> getUrlShortcut(
+      String urlShortcutId, Long userIdFromSecurityContext) {
+    return ResponseEntity.ok(
+        urlShortcutFacadeService.getShortcutsByIdAndUserId(
+            urlShortcutId, userIdFromSecurityContext));
   }
 
   @Override
-  public ResponseEntity<UrlShortcutResponseDto> updateUrlShortcut(String urlShortcutId, Long userIdFromSecurityContext, @Valid UrlShortcutRequestDto urlShortcutRequestDto) {
-    return ResponseEntity.ok(urlShortcutFacadeService.updateUrlShortcut(urlShortcutId, userIdFromSecurityContext, urlShortcutRequestDto));
+  public ResponseEntity<UrlShortcutResponseDto> updateUrlShortcut(
+      String urlShortcutId,
+      Long userIdFromSecurityContext,
+      @Valid UrlShortcutRequestDto urlShortcutRequestDto) {
+    return ResponseEntity.ok(
+        urlShortcutFacadeService.updateUrlShortcut(
+            urlShortcutId, userIdFromSecurityContext, urlShortcutRequestDto));
   }
 }

@@ -17,15 +17,13 @@ import ro.polak.urlshortener.domain.repository.UrlShortcutRepository;
 @Import(AdditionalTestConfiguration.class)
 public abstract class BaseIT {
 
-  @Autowired
-  protected MockMvc mockMvc;
+  @Autowired protected MockMvc mockMvc;
 
   /**
-   * The repository is intentionally injected as private so that the actual tests implementation tests
-   * the logic behavior rather than the database details.
+   * The repository is intentionally injected as private so that the actual tests implementation
+   * tests the logic behavior rather than the database details.
    */
-  @Autowired
-  private UrlShortcutRepository urlShortcutRepository;
+  @Autowired private UrlShortcutRepository urlShortcutRepository;
 
   @AfterEach
   void cleanUpDatabase() {

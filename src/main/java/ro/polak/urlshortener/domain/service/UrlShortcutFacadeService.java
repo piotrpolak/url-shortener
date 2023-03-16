@@ -14,8 +14,10 @@ public class UrlShortcutFacadeService {
   private final UrlShortcutService urlShortcutService;
   private final UrlShortcutApiMapper urlShortcutApiMapper;
 
-  public UrlShortcutResponseDto create(final long userId, final UrlShortcutRequestDto urlShortcutRequestDto) {
-    final UrlShortcut urlShortcut = urlShortcutApiMapper.toUrlShortcut(userId, urlShortcutRequestDto);
+  public UrlShortcutResponseDto create(
+      final long userId, final UrlShortcutRequestDto urlShortcutRequestDto) {
+    final UrlShortcut urlShortcut =
+        urlShortcutApiMapper.toUrlShortcut(userId, urlShortcutRequestDto);
     final UrlShortcut createdUrlShortcut = urlShortcutService.create(urlShortcut);
     return urlShortcutApiMapper.toUrlShortcutResponse(createdUrlShortcut);
   }
@@ -30,8 +32,10 @@ public class UrlShortcutFacadeService {
     return urlShortcutApiMapper.toUrlShortcutResponse(urlShortcut);
   }
 
-  public UrlShortcutResponseDto updateUrlShortcut(String urlShortcutId, long userId, UrlShortcutRequestDto urlShortcutRequestDto) {
-    final UrlShortcut urlShortcut = urlShortcutApiMapper.toUrlShortcut(userId, urlShortcutRequestDto);
+  public UrlShortcutResponseDto updateUrlShortcut(
+      String urlShortcutId, long userId, UrlShortcutRequestDto urlShortcutRequestDto) {
+    final UrlShortcut urlShortcut =
+        urlShortcutApiMapper.toUrlShortcut(userId, urlShortcutRequestDto);
     final UrlShortcut updatedUrlShortcut = urlShortcutService.update(urlShortcutId, urlShortcut);
     return urlShortcutApiMapper.toUrlShortcutResponse(updatedUrlShortcut);
   }

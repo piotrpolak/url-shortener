@@ -1,11 +1,11 @@
 package ro.polak.urlshortener.domain.model;
 
-import java.net.URI;
-import java.time.OffsetDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import java.net.URI;
+import java.time.OffsetDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,21 +30,17 @@ public class UrlShortcut {
       name = "hashids-sequence-generator",
       strategy = "ro.polak.urlshortener.support.HashidsSequenceGenerator",
       parameters = {
-          @Parameter(name = "sequence_name", value = "url_shortcut_sequence"),
-          @Parameter(name = "initial_value", value = "1"),
-          @Parameter(name = "increment_size", value = "1"),
-          @Parameter(name = "salt", value = "dfga083hf-SOME-RANDOM-VALUE")
-      }
-  )
+        @Parameter(name = "sequence_name", value = "url_shortcut_sequence"),
+        @Parameter(name = "initial_value", value = "1"),
+        @Parameter(name = "increment_size", value = "1"),
+        @Parameter(name = "salt", value = "dfga083hf-SOME-RANDOM-VALUE")
+      })
   private String textId;
 
   private URI destinationUrl;
 
-  @CreatedDate
-  private OffsetDateTime createdAt;
+  @CreatedDate private OffsetDateTime createdAt;
 
-  /**
-   * Identifies user
-   */
+  /** Identifies user */
   private long createdBy;
 }

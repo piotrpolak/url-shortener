@@ -10,18 +10,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 class WebConfig implements WebMvcConfigurer {
 
   private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
-      "classpath:/META-INF/resources/", "classpath:/resources/",
-      "classpath:/static/", "classpath:/public/"};
+    "classpath:/META-INF/resources/", "classpath:/resources/",
+    "classpath:/static/", "classpath:/public/"
+  };
 
-  /**
-   * Adds SwaggerUI support.
-   */
+  /** Adds SwaggerUI support. */
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/swagger-ui/**")
+    registry
+        .addResourceHandler("/swagger-ui/**")
         .addResourceLocations("classpath:/META-INF/resources/webjars/swagger-ui/3.36.1/");
 
-    registry.addResourceHandler("/**")
-        .addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+    registry.addResourceHandler("/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
   }
 }
