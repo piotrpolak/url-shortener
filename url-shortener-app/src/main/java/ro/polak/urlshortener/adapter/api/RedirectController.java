@@ -18,7 +18,7 @@ public class RedirectController {
   private final UrlShortcutFacade urlShortcutFacade;
 
   @GetMapping(value = "{urlShortcutId:[a-zA-Z0-9]+}")
-  ResponseEntity redirect(@PathVariable String urlShortcutId) {
+  ResponseEntity<?> redirect(@PathVariable String urlShortcutId) {
     return ResponseEntity.status(PERMANENT_REDIRECT)
         .header(LOCATION, urlShortcutFacade.getRedirectUrlByShortcutId(urlShortcutId))
         .build();

@@ -81,13 +81,11 @@
                         <configuration>
                             <java>
                                 <includes>
-                                    <include>target/generated-sources/openapi/src/gen/java/**/*.java</include>
+                                    <include>target/generated-sources/**/src/gen/java/**/*.java</include>
                                     <include>src/*/java/**/*.java</include>
                                 </includes>
                                 <removeUnusedImports/>
-                                <googleJavaFormat>
-                                    <style>GOOGLE</style>
-                                </googleJavaFormat>
+                                <googleJavaFormat/>
                             </java>
                         </configuration>
                     </execution>
