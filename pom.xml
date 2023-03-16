@@ -137,12 +137,17 @@
                             <templateDirectory>${project.basedir}/templates/JavaSpring</templateDirectory>
                             <configOptions>
                                 <dateLibrary>java8</dateLibrary>
+                                <serializationLibrary>jackson</serializationLibrary>
+                                <exceptionHandler>false</exceptionHandler>
                                 <interfaceOnly>true</interfaceOnly>
-                                <library>spring-boot</library>
-                                <performBeanValidation>true</performBeanValidation>
+                                <enumPropertyNaming>UPPERCASE</enumPropertyNaming>
+                                <useTags>true</useTags>
+                                <documentationProvider>none</documentationProvider>
+                                <gradleBuildFile>false</gradleBuildFile>
+                                <useSpringBoot3>true</useSpringBoot3>
                                 <skipDefaultInterface>true</skipDefaultInterface>
-                                <useOptional>true</useOptional>
-                                <sourceFolder>src/gen/java/main</sourceFolder>
+                                <!-- <implicitHeaders>true</implicitHeaders> -->
+                                <openApiNullable>false</openApiNullable>
                             </configOptions>
                         </configuration>
                     </execution>

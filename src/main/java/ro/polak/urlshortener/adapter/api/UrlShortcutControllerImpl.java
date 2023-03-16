@@ -1,6 +1,5 @@
 package ro.polak.urlshortener.adapter.api;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +10,13 @@ import ro.polak.urlshortener.domain.service.UrlShortcutFacadeService;
 
 @RestController
 @RequiredArgsConstructor
-class UrlShortcutControllerImpl implements ApiApi {
+class UrlShortcutControllerImpl implements ShortcutApi {
 
   private final UrlShortcutFacadeService urlShortcutFacadeService;
 
   @Override
   public ResponseEntity<UrlShortcutResponseDto> createUrlShortcut(
-      final Long userIdFromSecurityContext,
-      final @Valid UrlShortcutRequestDto urlShortcutRequestDto) {
+      final Long userIdFromSecurityContext, final UrlShortcutRequestDto urlShortcutRequestDto) {
     final UrlShortcutResponseDto urlShortcutResponseDto =
         urlShortcutFacadeService.create(userIdFromSecurityContext, urlShortcutRequestDto);
     return ResponseEntity.ok(urlShortcutResponseDto);
@@ -48,7 +46,7 @@ class UrlShortcutControllerImpl implements ApiApi {
   public ResponseEntity<UrlShortcutResponseDto> updateUrlShortcut(
       String urlShortcutId,
       Long userIdFromSecurityContext,
-      @Valid UrlShortcutRequestDto urlShortcutRequestDto) {
+      UrlShortcutRequestDto urlShortcutRequestDto) {
     return ResponseEntity.ok(
         urlShortcutFacadeService.updateUrlShortcut(
             urlShortcutId, userIdFromSecurityContext, urlShortcutRequestDto));
