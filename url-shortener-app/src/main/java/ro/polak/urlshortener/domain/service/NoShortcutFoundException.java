@@ -2,7 +2,7 @@ package ro.polak.urlshortener.domain.service;
 
 import org.springframework.http.HttpStatus;
 
-public class NoShortcutFoundException extends BusinessException {
+class NoShortcutFoundException extends BusinessException {
 
   @Override
   public HttpStatus getStatus() {

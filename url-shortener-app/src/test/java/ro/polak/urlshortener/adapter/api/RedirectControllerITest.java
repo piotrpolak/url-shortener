@@ -30,7 +30,7 @@ class RedirectControllerITest extends BaseIT {
             .andExpect(status().isCreated())
             .andReturn();
 
-    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+    var id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
 
     mockMvc
         .perform(get("/" + id).requestAttr(SKIP_OPEN_API_VALIDATION_ATTRIBUTE, true))

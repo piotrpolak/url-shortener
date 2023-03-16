@@ -7,32 +7,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ro.polak.urlshortener.adapter.api.dto.UrlShortcutRequestDto;
 import ro.polak.urlshortener.adapter.api.dto.UrlShortcutResponseDto;
-import ro.polak.urlshortener.domain.service.UrlShortcutFacadeService;
+import ro.polak.urlshortener.domain.service.UrlShortcutFacade;
 
 @RestController
 @RequiredArgsConstructor
 class UrlShortcutControllerImpl implements ShortcutApi {
 
-  private final UrlShortcutFacadeService urlShortcutFacadeService;
+  private final UrlShortcutFacade urlShortcutFacade;
 
   @Override
   public ResponseEntity<UrlShortcutResponseDto> createUrlShortcut(
       final Long userIdFromSecurityContext, final UrlShortcutRequestDto urlShortcutRequestDto) {
     final UrlShortcutResponseDto urlShortcutResponseDto =
-        urlShortcutFacadeService.create(userIdFromSecurityContext, urlShortcutRequestDto);
+        urlShortcutFacade.create(userIdFromSecurityContext, urlShortcutRequestDto);
     return ResponseEntity.created(URI.create(urlShortcutResponseDto.getDestinationUrl()))
         .body(urlShortcutResponseDto);
   }
 
   @Override
   public ResponseEntity<List<UrlShortcutResponseDto>> getUserShortcuts(Long userId) {
-    return ResponseEntity.ok(urlShortcutFacadeService.getShortcutsByUserId(userId));
+    return ResponseEntity.ok(urlShortcutFacade.getShortcutsByUserId(userId));
   }
 
   @Override
   public ResponseEntity<Void> deleteUrlShortcut(
       String urlShortcutId, Long userIdFromSecurityContext) {
-    urlShortcutFacadeService.deleteUrlShortcut(urlShortcutId, userIdFromSecurityContext);
+    urlShortcutFacade.deleteUrlShortcut(urlShortcutId, userIdFromSecurityContext);
     return ResponseEntity.accepted().build();
   }
 
@@ -40,8 +40,7 @@ class UrlShortcutControllerImpl implements ShortcutApi {
   public ResponseEntity<UrlShortcutResponseDto> getUrlShortcut(
       String urlShortcutId, Long userIdFromSecurityContext) {
     return ResponseEntity.ok(
-        urlShortcutFacadeService.getShortcutsByIdAndUserId(
-            urlShortcutId, userIdFromSecurityContext));
+        urlShortcutFacade.getShortcutsByIdAndUserId(urlShortcutId, userIdFromSecurityContext));
   }
 
   @Override
@@ -50,7 +49,7 @@ class UrlShortcutControllerImpl implements ShortcutApi {
       Long userIdFromSecurityContext,
       UrlShortcutRequestDto urlShortcutRequestDto) {
     return ResponseEntity.ok(
-        urlShortcutFacadeService.updateUrlShortcut(
+        urlShortcutFacade.updateUrlShortcut(
             urlShortcutId, userIdFromSecurityContext, urlShortcutRequestDto));
   }
 }

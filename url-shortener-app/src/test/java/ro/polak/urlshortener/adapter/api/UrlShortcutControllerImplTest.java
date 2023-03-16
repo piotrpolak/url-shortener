@@ -1,6 +1,7 @@
 package ro.polak.urlshortener.adapter.api;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,8 +12,6 @@ import static ro.polak.urlshortener.support.DocumentationAndValidationMockMvcBui
 
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 import ro.polak.urlshortener.BaseIT;
 
 class UrlShortcutControllerImplTest extends BaseIT {
@@ -28,11 +27,11 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(
             post("/api/v1/shortcuts")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
         .andExpect(status().isCreated())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(jsonPath("$.id").exists())
         .andExpect(jsonPath("$.createdBy", equalTo(DEFAULT_USER_ID)))
         .andExpect(jsonPath("$.createdAt").exists())
@@ -42,21 +41,21 @@ class UrlShortcutControllerImplTest extends BaseIT {
 
   @Test
   void should_get_new_url_shortcut() throws Exception {
-    MvcResult result =
+    var result =
         mockMvc
             .perform(
                 post("/api/v1/shortcuts")
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(APPLICATION_JSON)
                     .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                     .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
             .andReturn();
 
-    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+    var id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
 
     mockMvc
         .perform(get("/api/v1/shortcuts/" + id).header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(jsonPath("$.id").exists())
         .andExpect(jsonPath("$.createdBy", equalTo(DEFAULT_USER_ID)))
         .andExpect(jsonPath("$.createdAt").exists())
@@ -65,21 +64,39 @@ class UrlShortcutControllerImplTest extends BaseIT {
   }
 
   @Test
+  void should_not_allow_reading_shortcuts_by_other_users() throws Exception {
+    var result =
+        mockMvc
+            .perform(
+                post("/api/v1/shortcuts")
+                    .contentType(APPLICATION_JSON)
+                    .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
+                    .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
+            .andReturn();
+
+    var id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+
+    mockMvc
+        .perform(get("/api/v1/shortcuts/" + id).header(X_AUTH_USER_ID_HEADER, OTHER_USER_ID))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void should_list_user_shortcuts() throws Exception {
     mockMvc
         .perform(get("/api/v1/users/123/shortcuts").header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(jsonPath("$.length()", equalTo(0)));
 
     mockMvc
         .perform(
             post("/api/v1/shortcuts")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
         .andExpect(status().isCreated())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(jsonPath("$.id").exists())
         .andExpect(jsonPath("$.createdBy", equalTo(DEFAULT_USER_ID)))
         .andExpect(jsonPath("$.createdAt").exists())
@@ -88,7 +105,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(get("/api/v1/users/123/shortcuts").header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(jsonPath("$.length()", equalTo(1)));
   }
 
@@ -97,13 +114,13 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(get("/api/v1/users/123/shortcuts").header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(jsonPath("$.length()", equalTo(0)));
 
     mockMvc
         .perform(
             post("/api/v1/shortcuts")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
         .andExpect(status().isCreated());
@@ -111,7 +128,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(
             post("/api/v1/shortcuts")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
         .andExpect(status().isCreated());
@@ -119,7 +136,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(get("/api/v1/users/123/shortcuts").header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(jsonPath("$.length()", equalTo(2)));
   }
 
@@ -128,7 +145,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(
             post("/api/v1/shortcuts")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content("{\"destinationUrl\": \"\"}")
                 .requestAttr(SKIP_OPEN_API_VALIDATION_ATTRIBUTE, true))
         .andExpect(status().isBadRequest());
@@ -139,7 +156,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(
             post("/api/v1/shortcuts")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{}")
                 .requestAttr(SKIP_OPEN_API_VALIDATION_ATTRIBUTE, true))
@@ -151,7 +168,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(
             post("/api/v1/shortcuts")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"\"}")
                 .requestAttr(SKIP_OPEN_API_VALIDATION_ATTRIBUTE, true))
@@ -160,16 +177,16 @@ class UrlShortcutControllerImplTest extends BaseIT {
 
   @Test
   void should_delete_shortcut() throws Exception {
-    MvcResult result =
+    var result =
         mockMvc
             .perform(
                 post("/api/v1/shortcuts")
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(APPLICATION_JSON)
                     .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                     .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
             .andReturn();
 
-    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+    var id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
 
     mockMvc
         .perform(get("/api/v1/shortcuts/" + id).header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
@@ -193,16 +210,16 @@ class UrlShortcutControllerImplTest extends BaseIT {
 
   @Test
   void should_not_allow_deleting_shortcuts_of_another_user() throws Exception {
-    MvcResult result =
+    var result =
         mockMvc
             .perform(
                 post("/api/v1/shortcuts")
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(APPLICATION_JSON)
                     .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                     .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
             .andReturn();
 
-    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+    var id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
 
     mockMvc
         .perform(delete("/api/v1/shortcuts/" + id).header(X_AUTH_USER_ID_HEADER, OTHER_USER_ID))
@@ -218,7 +235,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(
             post("/api/v1/shortcuts/XYZ")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
         .andExpect(status().isNotFound());
@@ -226,21 +243,21 @@ class UrlShortcutControllerImplTest extends BaseIT {
 
   @Test
   void should_update_shortcut() throws Exception {
-    MvcResult result =
+    var result =
         mockMvc
             .perform(
                 post("/api/v1/shortcuts")
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(APPLICATION_JSON)
                     .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                     .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
             .andReturn();
 
-    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+    var id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
 
     mockMvc
         .perform(
             post("/api/v1/shortcuts/" + id)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.example.com/\"}"))
         .andExpect(status().isOk());
@@ -253,21 +270,21 @@ class UrlShortcutControllerImplTest extends BaseIT {
 
   @Test
   void should_not_allow_updating_shortcuts_of_another_user() throws Exception {
-    MvcResult result =
+    var result =
         mockMvc
             .perform(
                 post("/api/v1/shortcuts")
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(APPLICATION_JSON)
                     .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                     .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
             .andReturn();
 
-    String id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
+    var id = JsonPath.read(result.getResponse().getContentAsString(), "$.id");
 
     mockMvc
         .perform(
             post("/api/v1/shortcuts/" + id)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, OTHER_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.example.com/\"}"))
         .andExpect(status().isForbidden());

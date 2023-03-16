@@ -9,7 +9,7 @@ import ro.polak.urlshortener.domain.model.UrlShortcut;
 
 @Service
 @RequiredArgsConstructor
-public class UrlShortcutFacadeService {
+public class UrlShortcutFacade {
 
   private final UrlShortcutService urlShortcutService;
   private final UrlShortcutApiMapper urlShortcutApiMapper;

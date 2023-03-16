@@ -2,7 +2,7 @@ package ro.polak.urlshortener.domain.service;
 
 import org.springframework.http.HttpStatus;
 
-public class UserNotEntitledToShortcutException extends BusinessException {
+class UserNotEntitledToShortcutException extends BusinessException {
 
   @Override
   public HttpStatus getStatus() {
