@@ -90,12 +90,12 @@ mvn clean install
 Running the project locally (H2 in-memory database)
 
 ```bash
-mvn spring-boot:run
+pushd url-shortener-app && mvn spring-boot:run; popd
 ```
 
 Running the project locally (H2 in-memory database + SwaggerUI)
 ```bash
-mvn spring-boot:run -PswaggerUI
+pushd url-shortener-app && mvn spring-boot:run -PswaggerUI; popd
 ```
 Swagger file: http://localhost:8080/swagger.yml
 Swagger UI can be accessed at: http://localhost:8080/swagger-ui.html
