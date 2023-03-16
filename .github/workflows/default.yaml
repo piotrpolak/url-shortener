@@ -28,6 +28,4 @@ jobs:
           java-version: 17
           cache: maven
 
-      - run: mvn clean verify \
-          -P\!default,halt-on-formatting-issues \
-          --batch-mode
+      - run: mvn clean verify -P\!default,halt-on-formatting-issues --batch-mode
