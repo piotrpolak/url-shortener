@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import lombok.AccessLevel;
@@ -37,7 +38,7 @@ public class UrlShortcut {
       })
   private String textId;
 
-  private URI destinationUrl;
+  @NotNull private URI destinationUrl;
 
   @CreatedDate private OffsetDateTime createdAt;
 

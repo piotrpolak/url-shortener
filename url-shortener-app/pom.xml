@@ -10,6 +10,9 @@
     </parent>
 
     <artifactId>url-shortener-app</artifactId>
+    <properties>
+        <swagger-request-validator-mockmvc.version>2.34.0</swagger-request-validator-mockmvc.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -71,11 +74,22 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.14.2</version>
+        </dependency>
 
         <!-- Both for tests and for demo -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.oai</groupId>
+            <artifactId>swagger-request-validator-mockmvc</artifactId>
+            <version>${swagger-request-validator-mockmvc.version}</version>
         </dependency>
     </dependencies>
 
@@ -161,6 +175,12 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.8</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*Exception.class</exclude>
+                        <exclude>**/*UrlShortenerApplication.class</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -187,14 +207,14 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.89</minimum>
-                                            <maximum>0.90</maximum>
+                                            <minimum>0.99</minimum>
+                                            <maximum>1.00</maximum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.83</minimum>
-                                            <maximum>0.84</maximum>
+                                            <minimum>0.87</minimum>
+                                            <maximum>0.88</maximum>
                                         </limit>
                                     </limits>
                                 </rule>

@@ -1,7 +1,16 @@
 package ro.polak.urlshortener.domain.service;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.FORBIDDEN)
-class UserNotEntitledToShortcutException extends RuntimeException {}
+public class UserNotEntitledToShortcutException extends BusinessException {
+
+  @Override
+  public HttpStatus getStatus() {
+    return HttpStatus.FORBIDDEN;
+  }
+
+  @Override
+  public String getSituationMessage() {
+    return "No access";
+  }
+}

@@ -3,7 +3,7 @@ package ro.polak.urlshortener.domain.service;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.SneakyThrows;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import ro.polak.urlshortener.adapter.api.dto.UrlShortcutRequestDto;
 import ro.polak.urlshortener.adapter.api.dto.UrlShortcutResponseDto;
@@ -12,12 +12,19 @@ import ro.polak.urlshortener.domain.model.UrlShortcut;
 @Service
 class UrlShortcutApiMapper {
 
-  @SneakyThrows
   UrlShortcut toUrlShortcut(final long userId, final UrlShortcutRequestDto urlShortcutRequestDto) {
     return UrlShortcut.builder()
         .createdBy(userId)
-        .destinationUrl(new URI(urlShortcutRequestDto.getDestinationUrl()))
+        .destinationUrl(toUriOrNull(urlShortcutRequestDto))
         .build();
+  }
+
+  private static URI toUriOrNull(UrlShortcutRequestDto urlShortcutRequestDto) {
+    if (Strings.isNotBlank(urlShortcutRequestDto.getDestinationUrl())) {
+      return URI.create(urlShortcutRequestDto.getDestinationUrl());
+    } else {
+      return null;
+    }
   }
 
   UrlShortcutResponseDto toUrlShortcutResponse(final UrlShortcut urlShortcut) {

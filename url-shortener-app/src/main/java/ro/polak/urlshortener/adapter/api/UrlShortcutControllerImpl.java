@@ -1,5 +1,6 @@
 package ro.polak.urlshortener.adapter.api;
 
+import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,8 @@ class UrlShortcutControllerImpl implements ShortcutApi {
       final Long userIdFromSecurityContext, final UrlShortcutRequestDto urlShortcutRequestDto) {
     final UrlShortcutResponseDto urlShortcutResponseDto =
         urlShortcutFacadeService.create(userIdFromSecurityContext, urlShortcutRequestDto);
-    return ResponseEntity.ok(urlShortcutResponseDto);
+    return ResponseEntity.created(URI.create(urlShortcutResponseDto.getDestinationUrl()))
+        .body(urlShortcutResponseDto);
   }
 
   @Override

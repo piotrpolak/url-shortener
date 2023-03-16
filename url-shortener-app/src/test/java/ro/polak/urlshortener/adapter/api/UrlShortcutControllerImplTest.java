@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ro.polak.urlshortener.support.DocumentationAndValidationMockMvcBuilderCustomizer.SKIP_OPEN_API_VALIDATION_ATTRIBUTE;
 
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,10 @@ import ro.polak.urlshortener.BaseIT;
 class UrlShortcutControllerImplTest extends BaseIT {
 
   private static final String X_AUTH_USER_ID_HEADER = "X-AUTH-USER-ID";
-  private static final int OTHER_USER_ID = 999;
+
   private static final int DEFAULT_USER_ID = 123;
+
+  private static final int OTHER_USER_ID = 999;
 
   @Test
   void should_create_new_url_shortcut() throws Exception {
@@ -28,7 +31,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.id").exists())
         .andExpect(jsonPath("$.createdBy", equalTo(DEFAULT_USER_ID)))
@@ -75,7 +78,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.id").exists())
         .andExpect(jsonPath("$.createdBy", equalTo(DEFAULT_USER_ID)))
@@ -103,7 +106,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
-        .andExpect(status().isOk());
+        .andExpect(status().isCreated());
 
     mockMvc
         .perform(
@@ -111,7 +114,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"https://www.google.com/\"}"))
-        .andExpect(status().isOk());
+        .andExpect(status().isCreated());
 
     mockMvc
         .perform(get("/api/v1/users/123/shortcuts").header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
@@ -123,7 +126,11 @@ class UrlShortcutControllerImplTest extends BaseIT {
   @Test
   void should_not_create_url_shortcut_for_missing_user_id_header() throws Exception {
     mockMvc
-        .perform(post("/api/v1/shortcuts").contentType(MediaType.APPLICATION_JSON).content("{}"))
+        .perform(
+            post("/api/v1/shortcuts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"destinationUrl\": \"\"}")
+                .requestAttr(SKIP_OPEN_API_VALIDATION_ATTRIBUTE, true))
         .andExpect(status().isBadRequest());
   }
 
@@ -134,7 +141,20 @@ class UrlShortcutControllerImplTest extends BaseIT {
             post("/api/v1/shortcuts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
-                .content("{}"))
+                .content("{}")
+                .requestAttr(SKIP_OPEN_API_VALIDATION_ATTRIBUTE, true))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void should_not_create_url_shortcut_for_empty_destination_id() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/shortcuts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
+                .content("{\"destinationUrl\": \"\"}")
+                .requestAttr(SKIP_OPEN_API_VALIDATION_ATTRIBUTE, true))
         .andExpect(status().isBadRequest());
   }
 
