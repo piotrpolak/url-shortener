@@ -10,8 +10,8 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 {{/serializableModel}}
 {{#useBeanValidation}}
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 {{/useBeanValidation}}
 {{#performBeanValidation}}
 import org.hibernate.validator.constraints.*;
