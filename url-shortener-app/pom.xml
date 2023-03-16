@@ -15,7 +15,7 @@
         <dependency>
             <groupId>ro.polak</groupId>
             <artifactId>url-shortener-api</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
@@ -92,7 +92,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/generated-sources/openapi/main/resources/static</outputDirectory>
+                            <outputDirectory>${project.build.directory}/classes/static/</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/../spec</directory>
