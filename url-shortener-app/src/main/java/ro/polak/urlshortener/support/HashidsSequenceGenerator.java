@@ -9,10 +9,9 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import org.hibernate.internal.util.config.ConfigurationHelper;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.type.BasicType;
 import org.hibernate.type.Type;
-import org.hibernate.type.descriptor.java.LongJavaType;
-import org.hibernate.type.descriptor.jdbc.BigIntJdbcType;
-import org.hibernate.type.internal.BasicTypeImpl;
+import org.hibernate.type.spi.TypeConfiguration;
 
 /**
  * The generator combines the of database sequences (fast, reliable, single hit to the database,
@@ -24,8 +23,8 @@ public class HashidsSequenceGenerator extends SequenceStyleGenerator {
 
   private static final String SALT_PROPERTY_NAME = "salt";
   private static final String DEFAULT_SALT = "DO-CHANGE-ME";
-  private static final BasicTypeImpl<Long> LONG_TYPE =
-      new BasicTypeImpl<>(LongJavaType.INSTANCE, BigIntJdbcType.INSTANCE);
+  private static final BasicType<Long> LONG_TYPE =
+      new TypeConfiguration().getBasicTypeRegistry().getRegisteredType(Long.class);
 
   /**
    * Salt MUST NOT be changed throughout the lifecycle of the application as it will mess up with

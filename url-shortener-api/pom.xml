@@ -49,17 +49,21 @@
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <templateDirectory>${project.basedir}/../codegen/templates/JavaSpring</templateDirectory>
                             <configOptions>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>none</documentationProvider>
                                 <dateLibrary>java8</dateLibrary>
                                 <serializationLibrary>jackson</serializationLibrary>
                                 <exceptionHandler>false</exceptionHandler>
                                 <interfaceOnly>true</interfaceOnly>
-                                <enumPropertyNaming>UPPERCASE</enumPropertyNaming>
+                                <enumPropertyNaming>MACRO_CASE</enumPropertyNaming>
                                 <useTags>true</useTags>
-                                <documentationProvider>none</documentationProvider>
                                 <gradleBuildFile>false</gradleBuildFile>
                                 <useSpringBoot3>true</useSpringBoot3>
+                                <library>spring-boot</library>
+                                <useJakartaEe>true</useJakartaEe>
+                                <performBeanValidation>true</performBeanValidation>
+                                <useBeanValidation>true</useBeanValidation>
                                 <skipDefaultInterface>true</skipDefaultInterface>
-                                <!-- <implicitHeaders>true</implicitHeaders> -->
                                 <openApiNullable>false</openApiNullable>
                             </configOptions>
                         </configuration>

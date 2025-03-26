@@ -1,45 +1,27 @@
 package ro.polak.urlshortener.domain.service;
 
-import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.util.Strings;
-import org.springframework.stereotype.Service;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ro.polak.urlshortener.adapter.api.dto.UrlShortcutRequestDto;
 import ro.polak.urlshortener.adapter.api.dto.UrlShortcutResponseDto;
 import ro.polak.urlshortener.domain.model.UrlShortcut;
 
-@Service
-class UrlShortcutApiMapper {
+@Mapper(componentModel = "spring")
+interface UrlShortcutApiMapper {
 
-  UrlShortcut toUrlShortcut(final long userId, final UrlShortcutRequestDto urlShortcutRequestDto) {
-    return UrlShortcut.builder()
-        .createdBy(userId)
-        .destinationUrl(toUriOrNull(urlShortcutRequestDto))
-        .build();
+  @Mapping(target = "createdAt", ignore = true) // Populated by Hibernate
+  @Mapping(target = "textId", ignore = true) // Populated by Hibernate
+  UrlShortcut toUrlShortcut(
+      final long createdBy, final UrlShortcutRequestDto urlShortcutRequestDto);
+
+  @Mapping(target = "id", source = "textId")
+  @Mapping(target = "shortenedUrl", source = ".")
+  UrlShortcutResponseDto toUrlShortcutResponse(final UrlShortcut urlShortcut);
+
+  default String toShortenedUrl(UrlShortcut urlShortcut) {
+    return "http://localhost:8080/" + urlShortcut.getTextId();
   }
 
-  private static URI toUriOrNull(UrlShortcutRequestDto urlShortcutRequestDto) {
-    if (Strings.isNotBlank(urlShortcutRequestDto.getDestinationUrl())) {
-      return URI.create(urlShortcutRequestDto.getDestinationUrl());
-    } else {
-      return null;
-    }
-  }
-
-  UrlShortcutResponseDto toUrlShortcutResponse(final UrlShortcut urlShortcut) {
-    return UrlShortcutResponseDto.builder()
-        .destinationUrl(urlShortcut.getDestinationUrl().toString())
-        .createdAt(urlShortcut.getCreatedAt())
-        .createdBy(urlShortcut.getCreatedBy())
-        .shortenedUrl("http://localhost:8080/" + urlShortcut.getTextId())
-        .id(urlShortcut.getTextId())
-        .build();
-  }
-
-  List<UrlShortcutResponseDto> toUrlShortcutsResponse(List<UrlShortcut> urlShortcuts) {
-    return urlShortcuts.stream()
-        .map(urlShortcut -> toUrlShortcutResponse(urlShortcut))
-        .collect(Collectors.toList());
-  }
+  List<UrlShortcutResponseDto> toUrlShortcutsResponse(List<UrlShortcut> urlShortcuts);
 }

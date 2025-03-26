@@ -2,20 +2,18 @@ package ro.polak.urlshortener.domain.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-import java.net.URI;
 import java.time.OffsetDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import ro.polak.urlshortener.support.HashidSequenceGenerated;
 
 @Entity
 @Data
@@ -26,19 +24,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class UrlShortcut {
 
   @Id
-  @GeneratedValue(generator = "hashids-sequence-generator")
-  @GenericGenerator(
-      name = "hashids-sequence-generator",
-      strategy = "ro.polak.urlshortener.support.HashidsSequenceGenerator",
-      parameters = {
-        @Parameter(name = "sequence_name", value = "url_shortcut_sequence"),
-        @Parameter(name = "initial_value", value = "1"),
-        @Parameter(name = "increment_size", value = "1"),
-        @Parameter(name = "salt", value = "dfga083hf-SOME-RANDOM-VALUE")
-      })
+  @HashidSequenceGenerated(
+      name = "url_shortcut_sequence",
+      startWith = 1,
+      incrementBy = 1,
+      salt = "dfga083hf-SOME-RANDOM-VALUE")
   private String textId;
 
-  @NotNull private URI destinationUrl;
+  @NotNull @URL private String destinationUrl;
 
   @CreatedDate private OffsetDateTime createdAt;
 

@@ -118,3 +118,12 @@ The DTOs and controller interfaces are generated out of the `url-shortener.yaml`
 https://github.com/OpenAPITools/openapi-generator tool.
 
 More on the API First approach can be found at https://www.polak.ro/2021/04/02/api-first-and-code-generation-done-right.html
+
+## TODO
+
+- improve error handler (and assertions)
+- upgrade Hashids library
+- client side library generation
+- Test Containers
+- request/response logging
+- Docker image build as part of the pipeline
