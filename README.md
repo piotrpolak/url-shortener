@@ -119,6 +119,10 @@ https://github.com/OpenAPITools/openapi-generator tool.
 
 More on the API First approach can be found at https://www.polak.ro/2021/04/02/api-first-and-code-generation-done-right.html
 
+## Docker
+
+Multilayered production image creation based on https://medium.com/@cat.edelveis/a-guide-to-docker-multi-stage-builds-for-spring-boot-08e3a64c9812
+
 ## TODO
 
 - improve error handler (and assertions)

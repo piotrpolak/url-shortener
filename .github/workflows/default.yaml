@@ -28,6 +28,6 @@ jobs:
           java-version: 21
           cache: maven
 
-      - run: mvn clean verify -P\!default,halt-on-formatting-issues --batch-mode
+      - run: ./mvnw clean verify -P\!default,halt-on-formatting-issues --batch-mode
 
       - run: make dockerprodbuild
