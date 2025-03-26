@@ -1,6 +1,7 @@
 package ro.polak.urlshortener.adapter.api;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,7 +37,8 @@ class UrlShortcutControllerImplTest extends BaseIT {
         .andExpect(jsonPath("$.createdBy", equalTo(DEFAULT_USER_ID)))
         .andExpect(jsonPath("$.createdAt").exists())
         .andExpect(jsonPath("$.shortenedUrl").exists())
-        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.google.com/")));
+        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.google.com/")))
+        .andExpect(jsonPath("$.shortenedUrl", startsWith("http://localhost:8080/")));
   }
 
   @Test
@@ -60,7 +62,8 @@ class UrlShortcutControllerImplTest extends BaseIT {
         .andExpect(jsonPath("$.createdBy", equalTo(DEFAULT_USER_ID)))
         .andExpect(jsonPath("$.createdAt").exists())
         .andExpect(jsonPath("$.shortenedUrl").exists())
-        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.google.com/")));
+        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.google.com/")))
+        .andExpect(jsonPath("$.shortenedUrl", startsWith("http://localhost:8080/")));
   }
 
   @Test
@@ -100,7 +103,8 @@ class UrlShortcutControllerImplTest extends BaseIT {
         .andExpect(jsonPath("$.id").exists())
         .andExpect(jsonPath("$.createdBy", equalTo(DEFAULT_USER_ID)))
         .andExpect(jsonPath("$.createdAt").exists())
-        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.google.com/")));
+        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.google.com/")))
+        .andExpect(jsonPath("$.shortenedUrl", startsWith("http://localhost:8080/")));
 
     mockMvc
         .perform(get("/api/v1/users/123/shortcuts").header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
@@ -152,7 +156,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
   }
 
   @Test
-  void should_not_create_url_shortcut_for_missing_destination_id() throws Exception {
+  void should_not_create_url_shortcut_for_missing_destination_url() throws Exception {
     mockMvc
         .perform(
             post("/api/v1/shortcuts")
@@ -164,7 +168,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
   }
 
   @Test
-  void should_not_create_url_shortcut_for_empty_destination_id() throws Exception {
+  void should_not_create_url_shortcut_for_empty_destination_url() throws Exception {
     mockMvc
         .perform(
             post("/api/v1/shortcuts")
@@ -172,6 +176,17 @@ class UrlShortcutControllerImplTest extends BaseIT {
                 .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
                 .content("{\"destinationUrl\": \"\"}")
                 .requestAttr(SKIP_OPEN_API_VALIDATION_ATTRIBUTE, true))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void should_not_create_url_shortcut_for_invalid_destination_url() throws Exception {
+    mockMvc
+        .perform(
+            post("/api/v1/shortcuts")
+                .contentType(APPLICATION_JSON)
+                .header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID)
+                .content("{\"destinationUrl\": \"-1\"}"))
         .andExpect(status().isBadRequest());
   }
 
@@ -265,7 +280,8 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(get("/api/v1/shortcuts/" + id).header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.example.com/")));
+        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.example.com/")))
+        .andExpect(jsonPath("$.shortenedUrl", startsWith("http://localhost:8080/")));
   }
 
   @Test
@@ -292,6 +308,7 @@ class UrlShortcutControllerImplTest extends BaseIT {
     mockMvc
         .perform(get("/api/v1/shortcuts/" + id).header(X_AUTH_USER_ID_HEADER, DEFAULT_USER_ID))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.google.com/")));
+        .andExpect(jsonPath("$.destinationUrl", equalTo("https://www.google.com/")))
+        .andExpect(jsonPath("$.shortenedUrl", startsWith("http://localhost:8080/")));
   }
 }

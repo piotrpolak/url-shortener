@@ -11,7 +11,7 @@
 
     <artifactId>url-shortener-app</artifactId>
     <properties>
-        <swagger-request-validator-mockmvc.version>2.34.0</swagger-request-validator-mockmvc.version>
+        <swagger-request-validator-mockmvc.version>2.44.1</swagger-request-validator-mockmvc.version>
         <jackson-datatype-jsr310.version>2.14.2</jackson-datatype-jsr310.version>
     </properties>
 
@@ -58,6 +58,11 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson-datatype-jsr310.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
 
         <!-- Both for tests and for demo -->
         <dependency>
@@ -102,10 +107,28 @@
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                     <showWarnings>true</showWarnings>
+                    <failOnWarning>true</failOnWarning>
                     <compilerArgs>
                         <arg>-Xlint:all,-serial,-processing</arg>
                         <arg>-Werror</arg>
                     </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
@@ -161,11 +184,12 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.8</version>
+                <version>0.8.12</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*Exception.class</exclude>
                         <exclude>**/*UrlShortenerApplication.class</exclude>
+                        <exclude>**/*MapperImpl.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

@@ -2,7 +2,7 @@ package ro.polak.urlshortener.support;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.io.ClassPathResource;
 
@@ -11,8 +11,7 @@ public class ResourceUtil {
 
   public static String getResourceAsString(String path) {
     try {
-      var resourcePath = new ClassPathResource(path).getFile().toPath();
-      return new String(Files.readAllBytes(resourcePath));
+      return new ClassPathResource(path).getContentAsString(StandardCharsets.UTF_8);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
