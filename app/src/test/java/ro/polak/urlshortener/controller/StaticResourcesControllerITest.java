@@ -12,7 +12,7 @@ class StaticResourcesControllerITest extends BaseIT {
 
   @ParameterizedTest
   @CsvSource({"/swagger-ui.html", "/swagger-ui.css", "/url-shortener.yaml"})
-  public void should_create_shortcut_and_do_redirect(String uri) throws Exception {
+  public void should_serve_static_content(String uri) throws Exception {
     mockMvc
         .perform(get(uri).requestAttr(SKIP_OPEN_API_VALIDATION_ATTRIBUTE, true))
         .andExpect(status().isOk());
