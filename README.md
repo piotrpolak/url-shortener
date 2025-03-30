@@ -98,12 +98,12 @@ Alternatively run the service locally:
 Prerequisite: Run and configure Postgress database in `application.properties` (or by using environment variables).
 
 ```bash
-pushd url-shortener-app && mvn spring-boot:run; popd
+pushd app && mvn spring-boot:run; popd
 ```
 
 Running the project locally (H2 in-memory database + SwaggerUI)
 ```bash
-pushd url-shortener-app && mvn spring-boot:run -PswaggerUI; popd
+pushd app && mvn spring-boot:run -PswaggerUI; popd
 ```
 
 Swagger file: http://localhost:8080/swagger.yml

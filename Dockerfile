@@ -1,8 +1,8 @@
 FROM eclipse-temurin:21 AS builder
 WORKDIR /src
 COPY . .
-RUN ./mvnw clean package
-RUN java -Djarmode=tools -jar ./url-shortener-app/target/*.jar extract --layers --launcher --destination ./extracted
+RUN ./mvnw clean package --batch-mode
+RUN java -Djarmode=tools -jar ./app/target/*.jar extract --layers --launcher --destination ./extracted
 
 FROM eclipse-temurin:21
 WORKDIR /home/app

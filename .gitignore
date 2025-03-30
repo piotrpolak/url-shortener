@@ -1,6 +1,7 @@
 HELP.md
 cache/
 target/
+extracted/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
