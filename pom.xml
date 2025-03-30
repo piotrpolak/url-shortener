@@ -15,8 +15,8 @@
     <name>url-shortener</name>
     <description>URL shortener demo app</description>
     <modules>
-        <module>url-shortener-app</module>
-        <module>url-shortener-api</module>
+        <module>app</module>
+        <module>api</module>
     </modules>
 
     <properties>
