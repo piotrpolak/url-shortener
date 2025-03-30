@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21 AS builder
 WORKDIR /src
 COPY . .
-RUN ./mvnw clean package -P \!swaggerUI
+RUN ./mvnw clean package
 RUN java -Djarmode=tools -jar ./url-shortener-app/target/*.jar extract --layers --launcher --destination ./extracted
 
 FROM eclipse-temurin:21
