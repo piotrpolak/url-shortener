@@ -25,7 +25,7 @@ services:
       postgres:
         condition: service_healthy
   postgres:
-    image: postgres:15
+    image: postgres:15.5
     ports:
       - "5432:5432"
     environment:
